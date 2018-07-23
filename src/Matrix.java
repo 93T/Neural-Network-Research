@@ -117,7 +117,7 @@ public class Matrix {
     }
 
     static Matrix multiply(Matrix a, Matrix b) {
-        if (a.cols != b.cols) {
+        if (a.cols != b.rows) {
             System.out.println("Columns of A must match rows of B. Multiply static function matrix!");
             // TODO: look up how to write error messages
         }
