@@ -28,7 +28,7 @@ public class Matrix {
         return m;
     }
 
-    static Matrix fromArray(int[] arr) {
+    static Matrix fromArray(double[] arr) {
         Matrix m = new Matrix(arr.length, 1);
 
         for (int i = 0; i < arr.length; i++) {

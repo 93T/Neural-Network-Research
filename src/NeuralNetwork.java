@@ -31,7 +31,7 @@ public class NeuralNetwork {
         learning_rate = 0.1;
     }
 
-    public double[] feedforward(int[] input_array) {
+    public double[] feedforward(double[] input_array) {
         //generating the hidden outputs
         Matrix inputs = new Matrix(input_nodes, 1).fromArray(input_array);
         //System.out.println("Input: " + inputs.data[0][0] + " " + inputs.data[1][0]);
@@ -63,7 +63,7 @@ public class NeuralNetwork {
         System.out.println(out);
     }
 
-    public void train(int[] inputs, int[] targets) {
+    public void train(double[] inputs, double[] targets) {
         Matrix input = new Matrix(input_nodes, 1).fromArray(inputs);
         Matrix hidden = new Matrix(input_nodes, hidden_nodes).multiply(this.weights_ih, input);
         hidden.add(this.bias_h);

@@ -7,8 +7,8 @@ import java.util.Random;
 public class Run extends JFrame {
     NeuralNetwork brain;
 
-    int[][] inputs = {{0, 0}, {1, 0}, {0, 1}, {1, 1}};
-    int[][] targets = {{0}, {1}, {1}, {0}};
+    double[][] inputs = {{0, 0}, {1, 0}, {0, 1}, {1, 1}};
+    double[][] targets = {{0}, {1}, {1}, {0}};
 
     public Run() {
         super("Drawing Neural Networks");
@@ -22,7 +22,7 @@ public class Run extends JFrame {
     void drawRun(Graphics g) {
         Graphics2D g2d = (Graphics2D) g;
 
-        brain = new NeuralNetwork(2,2,1);
+        brain = new NeuralNetwork(2,4,1);
 
         brain.learning_rate = 0.1;
 
@@ -41,15 +41,15 @@ public class Run extends JFrame {
             for (int j = 0; j < rows; j++) {
                 double x = i * resolution;
                 double y = j * resolution;
-                int input_1 = i / (cols - 1);
-                int input_2 = j / (rows - 1);
-                int arr[] = {input_1, input_2};
+                double input_1 = i / (cols - 1);
+                double input_2 = j / (rows - 1);
+                double arr[] = {input_1, input_2};
                 double[] output = brain.feedforward(arr);
                 double col = output[0] * 255;
 
 
                 Circle c = new Circle(x, y, col);
-                g.fillOval((int) c.getCenterX(), (int) c.getCenterX(), (int) c.getRadius(), (int) c.getRadius());
+                g.fillOval((int) c.getCenterX(), (int) c.getCenterY(), (int) c.getRadius(), (int) c.getRadius());
             }
         }
     }
