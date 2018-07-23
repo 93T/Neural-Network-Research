@@ -14,7 +14,7 @@ public class Run extends JFrame {
         super("Drawing Neural Networks");
 
         getContentPane().setBackground(Color.WHITE);
-        setSize(480, 200);
+        setSize(550, 550);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
     }
@@ -44,8 +44,8 @@ public class Run extends JFrame {
                 int input_1 = i / (cols - 1);
                 int input_2 = j / (rows - 1);
                 int arr[] = {input_1, input_2};
-                int[] output = brain.feedforward(arr);
-                int col = output[0] * 255;
+                double[] output = brain.feedforward(arr);
+                double col = output[0] * 255;
 
 
                 Circle c = new Circle(x, y, col);

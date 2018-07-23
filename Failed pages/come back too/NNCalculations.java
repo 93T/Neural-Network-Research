@@ -1,7 +1,20 @@
 import java.util.concurrent.Callable;
 import java.util.function.Function;
 
+class ActivationFunction {
+    public double func;
+    public double dfunc;
+
+    ActivationFunction(double func, double dfunc) {
+        this.func = func;
+        this.dfunc = dfunc;
+    }
+}
+
 public class NNCalculations extends Matrix {
+    double sigmoid = new ActivationFunction((x) -> 1 / (1 + Math.exp(-x)), (y) -> (y * (1 - y)));
+    double tanh = new ActivationFunction((x) -> {Math.tanh(x), (y) -> 1 - (y * y)));
+
     NNCalculations(int row, int col) {
         super(row, col);
     }
@@ -18,7 +31,7 @@ public class NNCalculations extends Matrix {
                 int sum = 0;
 
                 for (int k = 0; k < a.cols; k++) {
-                    sum += a.data[i][k] * w.data[k][j];
+                    sum += (a.data[i][k] * w.data[k][j]);
                 }
 
                 result.data[i][j] = sum;
@@ -28,12 +41,12 @@ public class NNCalculations extends Matrix {
         return result;
     }
 
-    public double sigmoidFormula (double x) {
+    /*public double sigmoidFormula (double x) {
         return 1/(1+Math.exp(-x));
     }
     public double dSigmoidFormula (double y) {
         return y*(1-y);
-    }
+    }*/
 
     public double meanSquaredErrorFormula (double n, double[] expected, double[] actual) {
         double sumMeanSquaredError = 0.0;

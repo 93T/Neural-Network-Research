@@ -20,6 +20,7 @@ public class Matrix {
 
     public Matrix copy() {
         Matrix m = new Matrix(this.rows, this.cols);
+
         for (int i = 0; i < this.rows; i++) {
             for (int j = 0; j < this.cols; j++) {
                 m.data[i][j] = this.data[i][j];
@@ -28,18 +29,20 @@ public class Matrix {
         return m;
     }
 
-    static Matrix fromArray(int[] arr) {
+    static Matrix fromArray(double[] arr) {
         Matrix m = new Matrix(arr.length, 1);
 
         for (int i = 0; i < arr.length; i++) {
-            m.data[i][0] = arr[i];
+            m.map(m.data[i][0] = arr[i]);
         }
         return m;
+
+        //return new Matrix(arr.length, 1).map((e, i) -> arr[i]);
     }
 
     static Matrix subtract(Matrix a, Matrix b) {
         if (a.rows != b.rows || a.cols != b.cols) {
-            System.out.println("Columns and Rows of A must match Columns and Rows of B. Subtract function!");
+            System.out.println("Columns and Rows of A must match Columns and Rows of B.");
             //return;
         }
 
@@ -47,14 +50,14 @@ public class Matrix {
 
         for (int i = 0; i < result.rows; i++) {
             for(int j = 0; j < result.cols; j++) {
-                result.data[i][j] = a.data[i][j] - b.data[i][j];
+                result.map(result.data[i][j] = a.data[i][j] - b.data[i][j]);
             }
         }
 
         return result;
 
-        //// Return a new Matrix a-b
-        //        return new Matrix(a.rows, a.cols).map((_, i, j) => a.data[i][j] - b.data[i][j]);
+        // Return a new Matrix a-b
+        //return new Matrix(a.rows, a.cols).map((int i, int j) -> a.data[i][j] - b.data[i][j]);
     }
 
     public double[] toArray() {
@@ -75,25 +78,45 @@ public class Matrix {
         for (int i = 0; i < this.rows; i++) {
             for(int j = 0; j < this.cols; j++) {
                 Random r = new Random();
-                //this.data[i][j] = Math.random() * 2 - 1;
-                this.data[i][j] = -1.0 + (1.0-(-1.0)) * r.nextDouble();
+                //this.data[i][j] = -1.0 + (1.0-(-1.0)) * r.nextDouble();
+                this.map(this.data[i][j] = (2.0 - 1.0) * r.nextDouble());
             }
         }
 
-        //return this.map(e => Math.random() * 2 - 1);
+        //return this.map((double e) -> (2.0 - 1.0) * r.nextDouble());
     }
 
     public void add (Matrix n) {
-        if (this.rows != n.rows || this.cols != n.cols) {
-            System.out.println("Columns and Rows of A must match Columns and Rows of B. Add matrix public function");
-            return;
-        }
-
+        /*
         for (int i = 0; i < this.rows; i++) {
             for(int j = 0; j < this.cols; j++) {
                 this.data[i][j] += n.data[i][j];
             }
+        } */
+
+        if (n instanceof Matrix) {
+            if (this.rows != n.rows || this.cols != n.cols) {
+                System.out.println("Columns and Rows of A must match Columns and Rows of B.");
+                return;
+            }
+
+            for (int i = 0; i < this.rows; i++) {
+                for(int j = 0; j < this.cols; j++) {
+                    this.data[i][j] += n.data[i][j];
+                }
+            }
         }
+
+        /*
+        if (n instanceof Matrix) {
+            if (this.rows != n.rows || this.cols != n.cols) {
+                System.out.println("Columns and Rows of A must match Columns and Rows of B.");
+                return;
+            }
+            return this.map((e, i, j) -> e + n.data[i][j]);
+        } else {
+            return this.map(e -> e + n);
+        } */
     }
 
     public void add (double n) {
@@ -114,11 +137,13 @@ public class Matrix {
         }
 
         return result;
+
+        //return new Matrix(matrix.cols, matrix.rows).map((e, i, j) -> matrix.data[j][i]);
     }
 
     static Matrix multiply(Matrix a, Matrix b) {
-        if (a.cols != b.cols) {
-            System.out.println("Columns of A must match rows of B. Multiply static function matrix!");
+        if (a.cols != b.rows) {
+            System.out.println("Columns of A must match rows of B.");
             // TODO: look up how to write error messages
         }
 
@@ -130,18 +155,39 @@ public class Matrix {
 
         return result;
 
+/*
+        if (a.cols != b.rows) {
+            System.out.println("Columns of A must match rows of B.");
+            //return;
+        }
+
+        return new Matrix(a.rows, b.cols).map((e, i, j) -> {
+            // Dot product of values in col
+           double sum = 0;
+
+            for (int k = 0; k < a.cols; k++) {
+                sum += a.data[i][k] * b.data[k][j];
+            }
+
+            return sum;
+        }); */
     }
 
     public void multiply (Matrix n) {
-        if (this.rows != n.rows || this.cols != n.cols) {
-            System.out.println("Columns and Rows of A must match Columns and Rows of B. Multiply public function matrix!");
-            return;
-        }
+        if (n instanceof Matrix) {
+            if (this.rows != n.rows || this.cols != n.cols) {
+                System.out.println("Columns and Rows of A must match Columns and Rows of B.");
+                return;
+            }
 
         for (int i = 0; i < this.rows; i++) {
             for(int j = 0; j < this.cols; j++) {
-                this.data[i][j] *= n.data[i][j];
+                this.map(this.data[i][j] *= n.data[i][j]);
+                //System.out.println(" place: " + i + " " + j + " data this: " + this.data[i][j] + " data n: " + n.data[i][j]);
             }
+        }
+            // hadamard product
+            //return this.map((double e, int i, int j) -> e * n.data[i][j]);
         }
     }
 
@@ -149,10 +195,14 @@ public class Matrix {
         for (int i = 0; i < this.rows; i++) {
             for(int j = 0; j < this.cols; j++) {
                 this.data[i][j] *= n;
+                //System.out.println(" place: " + i + " " + j + " data this: " + this.data[i][j] + " data n: " + n);
             }
         }
+
+        //return this.map(e -> e * n);
     }
 
+    /*
     public void map(String func) {
         for (int i = 0; i < this.rows; i++) {
             for (int j = 0; i < this.cols; j++) {
@@ -187,9 +237,32 @@ public class Matrix {
                     //System.out.println(result.data[i][j]);
                 }
             }
-        }
+        } */
 
-        return result;
+    public Matrix map(double func) {
+        // Apply a function to every element of matrix
+        for (int i = 0; i < this.rows; i++) {
+            for (int j = 0; j < this.cols; j++) {
+                double val = this.data[i][j];
+                this.data[i][j] = func;
+            }
+        }
+        return this;
+    }
+
+    static Matrix map(Matrix m, double func) {
+        // Apply a function to every element of matrix
+        return new Matrix(m.rows, m.cols).map(func);
+    }
+
+    static void print(Matrix out) {
+        for (int i = 0; i < out.rows; i++) {
+            for (int j = 0; j < out.cols; j++) {
+                System.out.print(out.data[i][j]);
+                System.out.print(" ");
+            }
+            System.out.println("\n");
+        }
     }
 
 
@@ -215,7 +288,7 @@ public class Matrix {
                 }
             }
         } else {
-            // TODO: write error message here;
+           // error message
         }
         return mC;
     } */
