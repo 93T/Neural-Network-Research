@@ -22,7 +22,7 @@ public class Run extends JFrame {
     void drawRun(Graphics g) {
         Graphics2D g2d = (Graphics2D) g;
 
-        brain = new NeuralNetwork(2,4,1);
+        brain = new NeuralNetwork(2,2,1);
 
         brain.learning_rate = 0.1;
 
@@ -33,30 +33,60 @@ public class Run extends JFrame {
             brain.train(inputs[data], targets[data]);
         }
 
-        int resolution = 20;
-        int cols = (int) Math.floor(400 / resolution);
-        int rows = (int) Math.floor(400 / resolution);
+        int resolution = 10;
+        int cols = 550 / resolution;
+        int rows = 550 / resolution;
 
         for (int i = 0; i < cols; i++) {
             for (int j = 0; j < rows; j++) {
-                double x = i * resolution;
-                double y = j * resolution;
-                double input_1 = i / (cols - 1);
-                double input_2 = j / (rows - 1);
-                double arr[] = {input_1, input_2};
-                double[] output = brain.feedforward(arr);
-                double col = output[0] * 255;
 
+                double x1 = i / cols;
+                double x2 = j / rows;
+                double inputs[] = {x1, x2};
+                double[] y = brain.feedforward(inputs);
 
-                Circle c = new Circle(x, y, col);
-                g.fillOval((int) c.getCenterX(), (int) c.getCenterY(), (int) c.getRadius(), (int) c.getRadius());
+                /*
+                Random rand = new Random();
+
+                float re = rand.nextFloat();
+                float gr = rand.nextFloat();
+                float bl = rand.nextFloat();
+
+                */
+
+                double input1[] = {0, 0};
+                double input2[] = {0, 1};
+                double input3[] = {1, 0};
+                double input4[] = {1, 1};
+
+                //System.out.print(brain.feedforward(input1)[0] + " [0,0]");
+                //System.out.print(brain.feedforward(input2)[0] + " [0,1]");
+                //System.out.print(brain.feedforward(input3)[0] + " [1,0]");
+                //System.out.print(brain.feedforward(input4)[0] + " [1,1]");
+
+                Rectangle rect = new Rectangle(i*resolution, j*resolution, resolution, resolution);
+                Color col = new Color ((int) y[0]*255);
+                g2d.setPaint(col);
+                g2d.fill(rect);
+
+               // Circle c = new Circle((i*resolution), (j*resolution), resolution);
+                //g.fillOval((int) c.getCenterX(), (int) c.getCenterY(), (int) c.getRadius(), (int) c.getRadius());
             }
         }
     }
 
     public void paint(Graphics g) {
         super.paint(g);
-        drawRun(g);
+        //drawRun(g);
+        while(true) {
+            drawRun(g);
+        }
+
+        /*
+        super.paint(g);
+        Random r = new Random();
+        int num = 1 + r.nextInt()*200;
+        drawRun(g, num); */
 
         /*
         JFrame guiFrame = new JFrame();

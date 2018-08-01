@@ -11,24 +11,33 @@ public class NeuralNetwork {
 
     double learning_rate;
 
-    NeuralNetwork(int numI, int numH, int numO) {
-        this.input_nodes = numI;
-        this.hidden_nodes = numH;
-        this.output_nodes = numO;
+    NeuralNetwork(Object in_nodes, Object hid_nodes, Object out_nodes) {
+        if (in_nodes instanceof NeuralNetwork) {
+            NeuralNetwork a = (NeuralNetwork) in_nodes;
+            this.input_nodes = a.input_nodes;
+            this.hidden_nodes = a.hidden_nodes;
+            this.output_nodes = a.output_nodes;
 
-        this.weights_ih = new Matrix(this.hidden_nodes, this.input_nodes);
-        weights_ih.randomize();
+            this.weights_ih = a.weights_ih.copy();
+            this.weights_ho = a.weights_ho.copy();
 
-        weights_ho = new Matrix(output_nodes, hidden_nodes);
-        weights_ho.randomize();
+            this.bias_h = a.bias_h.copy();
+            this.bias_o = a.bias_o.copy();
+        } else {
+            this.input_nodes = (int) in_nodes;
+            this.hidden_nodes = (int) hid_nodes;
+            this.output_nodes = (int) out_nodes;
 
-        bias_h = new Matrix(hidden_nodes, 1);
-        bias_h.randomize();
+            this.weights_ih = new Matrix(this.hidden_nodes, this.input_nodes);
+            this.weights_ho = new Matrix(this.output_nodes, this.hidden_nodes);
+            this.weights_ih.randomize();
+            this.weights_ho.randomize();
 
-        bias_o = new Matrix(output_nodes, 1);
-        bias_o.randomize();
-
-        learning_rate = 0.1;
+            this.bias_h = new Matrix(this.hidden_nodes, 1);
+            this.bias_o = new Matrix(this.output_nodes, 1);
+            this.bias_h.randomize();
+            this.bias_o.randomize();
+        }
     }
 
     public double[] feedforward(double[] input_array) {
@@ -101,7 +110,7 @@ public class NeuralNetwork {
         Matrix hidden_errors = new Matrix(hidden_nodes, output_nodes).multiply(who_t, output_errors);
 
         // Calculate hidden gradient
-        Matrix hidden_gradient = new Matrix(hidden_nodes, input_nodes).map(hidden, "sigmoid");
+        Matrix hidden_gradient = new Matrix(hidden_nodes, input_nodes).map(hidden, "dSigmoid");
         hidden_gradient.multiply(hidden_errors);
         hidden_gradient.multiply(this.learning_rate);
 

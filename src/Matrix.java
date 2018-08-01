@@ -1,3 +1,4 @@
+import java.util.Arrays;
 import java.util.Random;
 
 public class Matrix {
@@ -9,13 +10,21 @@ public class Matrix {
         rows = row;
         cols = col;
 
-        data = new double[rows][cols];
+        this.data = new double[rows][cols];
+
 
         for (int i = 0; i < rows; i++) {
             for (int j = 0; j < cols; j++) {
-                data[i][j] = 0;
+                this.data[i][j] = 0;
             }
         }
+
+        /*
+        for (int i = 0; i < rows; i++) {
+            Arrays.fill(data[i], 0);
+        } */
+
+        //this.map("sigmoid");
     }
 
     public Matrix copy() {
@@ -34,6 +43,8 @@ public class Matrix {
         for (int i = 0; i < arr.length; i++) {
             m.data[i][0] = arr[i];
         }
+
+        m.map(m, "sigmoid");
         return m;
     }
 
@@ -51,6 +62,7 @@ public class Matrix {
             }
         }
 
+        result.map(result, "sigmoid");
         return result;
 
         //// Return a new Matrix a-b
@@ -80,10 +92,12 @@ public class Matrix {
             }
         }
 
+        this.map(this, "sigmoid");
+
         //return this.map(e => Math.random() * 2 - 1);
     }
 
-    public void add (Matrix n) {
+    public void add(Matrix n) {
         if (this.rows != n.rows || this.cols != n.cols) {
             System.out.println("Columns and Rows of A must match Columns and Rows of B. Add matrix public function");
             return;
@@ -94,6 +108,8 @@ public class Matrix {
                 this.data[i][j] += n.data[i][j];
             }
         }
+
+        this.map(this, "sigmoid");
     }
 
     public void add (double n) {
@@ -102,6 +118,8 @@ public class Matrix {
                 this.data[i][j] += n;
             }
         }
+
+        this.map(this, "sigmoid");
     }
 
     static Matrix transpose(Matrix matrix) {
@@ -112,6 +130,8 @@ public class Matrix {
                 result.data[i][j] = matrix.data[j][i];
             }
         }
+
+        result.map(result, "sigmoid");
 
         return result;
     }
@@ -128,6 +148,8 @@ public class Matrix {
 
         result = newCalc.weightedSummsFormula(a, b);
 
+        result.map(result, "sigmoid");
+
         return result;
 
     }
@@ -143,6 +165,8 @@ public class Matrix {
                 this.data[i][j] *= n.data[i][j];
             }
         }
+
+        this.map(this, "sigmoid");
     }
 
     public void multiply(double n) {
@@ -151,13 +175,15 @@ public class Matrix {
                 this.data[i][j] *= n;
             }
         }
+
+        this.map(this, "sigmoid");
     }
 
     public void map(String func) {
         for (int i = 0; i < this.rows; i++) {
             for (int j = 0; i < this.cols; j++) {
                 double val = this.data[i][j];
-                if (func == "sigmoid") {
+                if (func.equals("sigmoid")) {
                     NNCalculations newCalc = new NNCalculations(this.rows, this.cols);
                     this.data[i][j] = newCalc.sigmoidFormula(val);
                 } else {
@@ -175,7 +201,7 @@ public class Matrix {
             for (int j = 0; j < m.cols; j++) {
                 //System.out.print("rows: " + m.rows + " cols: " + m.cols);
                 double val = m.data[i][j];
-                if (func == "sigmoid") {
+                if (func.equals("sigmoid")) {
                     //System.out.println("S");
                     NNCalculations newCalc = new NNCalculations(m.rows, m.cols);
                     result.data[i][j] = newCalc.sigmoidFormula(val);
