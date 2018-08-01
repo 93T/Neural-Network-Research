@@ -3,6 +3,7 @@ import javafx.scene.shape.Circle;
 import javax.swing.*;
 import java.awt.*;
 import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 
 public class Run extends JFrame {
     NeuralNetwork brain;
@@ -22,13 +23,16 @@ public class Run extends JFrame {
     void drawRun(Graphics g) {
         Graphics2D g2d = (Graphics2D) g;
 
-        brain = new NeuralNetwork(2,2,1);
+        brain = new NeuralNetwork(2,4,1);
 
         brain.learning_rate = 0.1;
 
         for (int i = 0; i < 5000; i++) {
             Random r = new Random();
-            int data = Math.abs(r.nextInt()) % 4;
+            //int data = ThreadLocalRandom.current().nextInt(0, 4);
+            //int data = Math.abs(r.nextInt()) * 4;
+            //int range = (4 - 0);
+            int data = r.nextInt(4);
 
             brain.train(inputs[data], targets[data]);
         }
@@ -39,11 +43,13 @@ public class Run extends JFrame {
 
         for (int i = 0; i < cols; i++) {
             for (int j = 0; j < rows; j++) {
+                //System.out.println(i + " i " + j + " j");
 
-                double x1 = i / cols;
-                double x2 = j / rows;
+                double x1 = (double) i / (double) cols;
+                double x2 = (double) j / (double) rows;
+                //System.out.println(x1 + " x1 " + x2 + " x2 " + cols + " C " + rows + " R ");
                 double inputs[] = {x1, x2};
-                double[] y = brain.feedforward(inputs);
+                double y = brain.feedforward(inputs);
 
                 /*
                 Random rand = new Random();
@@ -51,7 +57,6 @@ public class Run extends JFrame {
                 float re = rand.nextFloat();
                 float gr = rand.nextFloat();
                 float bl = rand.nextFloat();
-
                 */
 
                 double input1[] = {0, 0};
@@ -63,14 +68,20 @@ public class Run extends JFrame {
                 //System.out.print(brain.feedforward(input2)[0] + " [0,1]");
                 //System.out.print(brain.feedforward(input3)[0] + " [1,0]");
                 //System.out.print(brain.feedforward(input4)[0] + " [1,1]");
+                //System.out.print(y + " [" + x1 + ", " + x2 + "]");
 
                 Rectangle rect = new Rectangle(i*resolution, j*resolution, resolution, resolution);
-                Color col = new Color ((int) y[0]*255);
+                Color col = new Color ((int) (y*255), (int) (y*255), (int) (y*255));
+                System.out.println(col.toString());
                 g2d.setPaint(col);
                 g2d.fill(rect);
 
-               // Circle c = new Circle((i*resolution), (j*resolution), resolution);
-                //g.fillOval((int) c.getCenterX(), (int) c.getCenterY(), (int) c.getRadius(), (int) c.getRadius());
+                /*
+                Circle c = new Circle(i*resolution, j*resolution, resolution);
+                Color col = new Color ((int) y*255);
+                g2d.setPaint(col);
+                g.fillOval((int) c.getCenterX(), (int) c.getCenterY(), (int) c.getRadius(), (int) c.getRadius());
+                */
             }
         }
     }

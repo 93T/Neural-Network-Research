@@ -15,7 +15,7 @@ public class NNCalculations extends Matrix {
 
         for (int i = 0; i < this.rows; i++) {
             for(int j = 0; j < this.cols; j++) {
-                int sum = 0;
+                double sum = 0;
 
                 for (int k = 0; k < a.cols; k++) {
                     sum += a.data[i][k] * w.data[k][j];

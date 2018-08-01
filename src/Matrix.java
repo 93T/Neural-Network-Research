@@ -44,7 +44,7 @@ public class Matrix {
             m.data[i][0] = arr[i];
         }
 
-        m.map(m, "sigmoid");
+        //m.map(m, "sigmoid");
         return m;
     }
 
@@ -62,7 +62,7 @@ public class Matrix {
             }
         }
 
-        result.map(result, "sigmoid");
+        //result.map(result, "sigmoid");
         return result;
 
         //// Return a new Matrix a-b
@@ -92,15 +92,15 @@ public class Matrix {
             }
         }
 
-        this.map(this, "sigmoid");
+        //this.map(this, "sigmoid");
 
         //return this.map(e => Math.random() * 2 - 1);
     }
 
-    public void add(Matrix n) {
+    public Matrix add(Matrix n) {
         if (this.rows != n.rows || this.cols != n.cols) {
             System.out.println("Columns and Rows of A must match Columns and Rows of B. Add matrix public function");
-            return;
+            //return;
         }
 
         for (int i = 0; i < this.rows; i++) {
@@ -109,17 +109,19 @@ public class Matrix {
             }
         }
 
-        this.map(this, "sigmoid");
+        //this.map(this, "sigmoid");
+        return this;
     }
 
-    public void add (double n) {
+    public Matrix add (double n) {
         for (int i = 0; i < this.rows; i++) {
             for(int j = 0; j < this.cols; j++) {
                 this.data[i][j] += n;
             }
         }
 
-        this.map(this, "sigmoid");
+        //this.map(this, "sigmoid");
+        return this;
     }
 
     static Matrix transpose(Matrix matrix) {
@@ -131,7 +133,7 @@ public class Matrix {
             }
         }
 
-        result.map(result, "sigmoid");
+        //result.map(result, "sigmoid");
 
         return result;
     }
@@ -148,7 +150,7 @@ public class Matrix {
 
         result = newCalc.weightedSummsFormula(a, b);
 
-        result.map(result, "sigmoid");
+        //result.map(result, "sigmoid");
 
         return result;
 
@@ -166,7 +168,7 @@ public class Matrix {
             }
         }
 
-        this.map(this, "sigmoid");
+        //this.map(this, "sigmoid");
     }
 
     public void multiply(double n) {
@@ -176,18 +178,20 @@ public class Matrix {
             }
         }
 
-        this.map(this, "sigmoid");
+        //this.map(this, "sigmoid");
     }
 
     public void map(String func) {
+        NNCalculations newCalc = new NNCalculations(this.rows, this.cols);
+
         for (int i = 0; i < this.rows; i++) {
             for (int j = 0; i < this.cols; j++) {
                 double val = this.data[i][j];
                 if (func.equals("sigmoid")) {
-                    NNCalculations newCalc = new NNCalculations(this.rows, this.cols);
+                    //NNCalculations newCalc = new NNCalculations(this.rows, this.cols);
                     this.data[i][j] = newCalc.sigmoidFormula(val);
                 } else {
-                    NNCalculations newCalc = new NNCalculations(this.rows, this.cols);
+                    //NNCalculations newCalc = new NNCalculations(this.rows, this.cols);
                     this.data[i][j] = newCalc.dSigmoidFormula(val);
                 }
             }
@@ -196,6 +200,7 @@ public class Matrix {
 
     static Matrix map(Matrix m, String func) {
         Matrix result = new Matrix(m.rows, m.cols);
+        NNCalculations newCalc = new NNCalculations(m.rows, m.cols);
 
         for (int i = 0; i < m.rows; i++) {
             for (int j = 0; j < m.cols; j++) {
@@ -203,12 +208,12 @@ public class Matrix {
                 double val = m.data[i][j];
                 if (func.equals("sigmoid")) {
                     //System.out.println("S");
-                    NNCalculations newCalc = new NNCalculations(m.rows, m.cols);
+                    //NNCalculations newCalc = new NNCalculations(m.rows, m.cols);
                     result.data[i][j] = newCalc.sigmoidFormula(val);
                     //System.out.println(result.data[i][j]);
                 } else {
                     //System.out.println("D");
-                    NNCalculations newCalc = new NNCalculations(m.rows, m.cols);
+                    //NNCalculations newCalc = new NNCalculations(m.rows, m.cols);
                     result.data[i][j] = newCalc.dSigmoidFormula(val);
                     //System.out.println(result.data[i][j]);
                 }

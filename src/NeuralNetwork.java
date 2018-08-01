@@ -40,24 +40,24 @@ public class NeuralNetwork {
         }
     }
 
-    public double[] feedforward(double[] input_array) {
+    public double feedforward(double[] input_array) {
         //generating the hidden outputs
         Matrix inputs = new Matrix(input_nodes, 1).fromArray(input_array);
         //System.out.println("Input: " + inputs.data[0][0] + " " + inputs.data[1][0]);
         Matrix hidden = new Matrix(input_nodes, hidden_nodes).multiply(this.weights_ih, inputs);
         //System.out.println("Hidden: " + hidden.data[0][0]);
-        hidden.add(this.bias_h);
+        hidden = hidden.add(this.bias_h);
         //System.out.println("Hidden 2: " + hidden.data[0][0] + " bias_h: " + this.bias_h.data[0][0]);
         // Activation function
-        hidden.map(hidden, "sigmoid");
+        hidden = hidden.map(hidden, "sigmoid");
         //System.out.println("Hidden 3: " + hidden.data[0][0]);
 
         //generating the output's outputs
         Matrix output = new Matrix(hidden_nodes, output_nodes).multiply(this.weights_ho, hidden);
         //System.out.println("Output: " + output.data[0][0] + " weight: " + this.weights_ho.data[0][0] + " " + this.weights_ho.data[0][1] + " hidden: " + hidden.data[0][0]);
-        output.add(this.bias_o);
+        output = output.add(this.bias_o);
         // Activation function
-        output.map(output, "sigmoid");
+        output = output.map(output, "sigmoid");
         //System.out.println("Given: " + output.data[0][0]);
 
         //double o[] = output.toArray();
@@ -65,7 +65,7 @@ public class NeuralNetwork {
         //System.out.println("output: " + o[0] + " hidden: " + hidden.data[0][0] +  " Input: " + input_array[0] + " " + input_array[1]);
 
         // sending back
-        return output.toArray();
+        return output.toArray()[0];
     }
 
     public void print(Matrix out) {
@@ -75,14 +75,14 @@ public class NeuralNetwork {
     public void train(double[] inputs, double[] targets) {
         Matrix input = new Matrix(input_nodes, 1).fromArray(inputs);
         Matrix hidden = new Matrix(input_nodes, hidden_nodes).multiply(this.weights_ih, input);
-        hidden.add(this.bias_h);
+        hidden = hidden.add(this.bias_h);
         //activation function
-        hidden.map(hidden, "sigmoid");
+        hidden = hidden.map(hidden, "sigmoid");
 
         // generating the output's output
         Matrix output = new Matrix(hidden_nodes, output_nodes).multiply(this.weights_ho, hidden);
-        output.add(this.bias_o);
-        output.map(output, "sigmoid");
+        output = output.add(this.bias_o);
+        output = output.map(output, "sigmoid");
 
         // convert array to matrix object
         Matrix target = new Matrix(hidden_nodes, output_nodes).fromArray(targets);
